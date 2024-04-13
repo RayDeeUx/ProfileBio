@@ -1,0 +1,18 @@
+{
+	"geode": "2.0.0",
+	"gd": "2.204",
+	"version": "v1.0.0",
+	"id": "yellowcat98.profilebio",
+	"name": "ProfileBio",
+	"developer": "YellowCat98",
+	"description": "This mod allows you to add a bio to your geometry dash profile",
+	"repository": "https://github.com/YellowCat98/ProfileBio",
+	"resources": {
+		"files": [
+			"resources/arial.ttf"
+		],
+		"sprites": [
+			"resources/Butotn.png"
+		]
+	}
+}
