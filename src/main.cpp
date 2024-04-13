@@ -186,7 +186,7 @@ class $modify(PBProfilePage, ProfilePage) {
         auto aboutMeBtn = CCMenuItemSpriteExtra::create(Butotn, nullptr, nullptr);
         aboutMeBtn->setEnabled(true);
         menu->setTouchPriority(-10000000); // why is this happening to me
-        menu->setPosition(ccp(115.5, 280));
+        menu->setPosition(ccp(90, 155));
         menu->addChild(aboutMeBtn);
         this->addChild(menu);
 
