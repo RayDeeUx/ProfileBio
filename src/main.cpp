@@ -19,8 +19,12 @@ std::string urlEncode(const std::string& str) {
     encoded << std::hex << std::uppercase;
 
     for (char ch : str) {
-        if (std::isalnum(ch) || ch == '-' || ch == '.' || ch == '.' || ch == '~') {
-            encoded << ch;
+        if (std::isalnum(ch) || ch == '-' || ch == '.' || ch == '~' || ch == '\n') {
+            if (ch == '\n') {
+                encoded << "%0A";
+            } else {
+                encoded << ch;
+            }
         } else {
             encoded << '%' << std::setw(2) << int(static_cast<unsigned char>(ch));
         }
@@ -172,10 +176,11 @@ class AboutMeHandler : public cocos2d::CCObject {
     }
 };
 
-class $modify(PBAccountSettingsLayer, GJAccountSettingsLayer) {
-    bool init(int p0) {
-        if (!GJAccountSettingsLayer::init(p0))
+class $modify(PBProfilePage, ProfilePage) {
+    bool init(int accountID, bool ownProfile) {
+        if (!ProfilePage::init(accountID, ownProfile))
         return false;
+        if (ownProfile) {
         auto menu = CCMenu::create();
         auto Butotn = CCSprite::create("Butotn.png"_spr);
         auto aboutMeBtn = CCMenuItemSpriteExtra::create(Butotn, nullptr, nullptr);
@@ -187,6 +192,7 @@ class $modify(PBAccountSettingsLayer, GJAccountSettingsLayer) {
 
         auto aboutMeHandler = new AboutMeHandler();
         aboutMeBtn->setTarget(aboutMeHandler, menu_selector(AboutMeHandler::onAboutMe));
+        }
         return true;
     }
 };
