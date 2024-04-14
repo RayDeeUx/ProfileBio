@@ -14,6 +14,21 @@
 
 using namespace geode::prelude;
 
+#ifdef __APPLE__
+
+/*
+	silly goofy fix because it errors if it comes after geode includes
+	than you prevter and ninxout
+	- raydeeux
+*/
+
+#define CommentType CommentTypeDummy
+#include <CoreGraphics/CoreGraphics.h>
+#include <CoreServices/CoreServices.h>
+#undef CommentType
+
+#endif
+
 std::string urlEncode(const std::string& str) {
 	std::ostringstream encoded;
 	encoded << std::hex << std::uppercase;
