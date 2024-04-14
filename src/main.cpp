@@ -160,6 +160,7 @@ class $modify(PBProfilePage, ProfilePage) {
 		auto menu = CCMenu::create();
 		menu->setID("buttons-menu"_spr);
 		menu->setPosition({0, 0});
+		menu->setTouchPriority(-10000000); // why is this happening to me
 		
 		auto bioShowSpr = ButtonSprite::create("Show Bio");
 		bioShowSpr->setScale(.5f);
@@ -174,18 +175,19 @@ class $modify(PBProfilePage, ProfilePage) {
 		
 		menu->addChild(bioShow);
 		
+		#ifndef GEODE_IS_MOBILE
 		if (m_ownProfile) {
 			auto btn = CCSprite::create("btn.png"_spr);
 			auto aboutMeBtn = CCMenuItemSpriteExtra::create(btn, nullptr, nullptr);
 			aboutMeBtn->setEnabled(true);
 			aboutMeBtn->setID("add-bio-btn"_spr);
-			menu->setTouchPriority(-10000000); // why is this happening to me
 			aboutMeBtn->setPosition({getChildByIDRecursive("background")->getContentWidth(), getChildByIDRecursive("bottom-menu")->getPositionY()});
 			menu->addChild(aboutMeBtn);
 	
 			auto aboutMeHandler = new AboutMeHandler();
 			aboutMeBtn->setTarget(aboutMeHandler, menu_selector(AboutMeHandler::onAboutMe));
 		}
+		#endif
 		
 		this->addChild(menu);
 	}
