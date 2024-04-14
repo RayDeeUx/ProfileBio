@@ -8,7 +8,7 @@
 	"id": "yellowcat98.profilebio",
 	"name": "ProfileBio",
 	"developer": "YellowCat98",
-	"description": "This mod allows you to add a bio to your geometry dash profile",
+	"description": "Add and view bios on Geometry Dash user profiles.",
 	"repository": "https://github.com/YellowCat98/ProfileBio",
 	"resources": {
 		"files": [
