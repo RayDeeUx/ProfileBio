@@ -1,4 +1,4 @@
-#ifdef GEODE_IS_MACOS
+#ifdef __APPLE__
 
 /*
 	silly goofy fix because it errors if it comes after geode includes
