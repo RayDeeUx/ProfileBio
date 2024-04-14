@@ -12,7 +12,6 @@
 #undef CommentType
 
 #endif
-#include <Geode/Geode.hpp>
 #include <Geode/modify/MenuLayer.hpp>
 #include <Geode/modify/ProfilePage.hpp>
 #include <Geode/utils/web.hpp>
@@ -24,7 +23,6 @@
 #include <cctype>
 #include <iomanip>
 #include <string>
-#include <Geode/modify/GJAccountSettingsLayer.hpp>
 
 using namespace geode::prelude;
 
