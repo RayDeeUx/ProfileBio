@@ -1,7 +1,11 @@
 {
 	"geode": "2.0.0",
-	"gd": "2.204",
-	"version": "v1.0.0",
+	"gd": {
+		"win": "2.204",
+		"android": "2.205",
+		"mac": "2.200"
+	},
+	"version": "v1.0.1",
 	"id": "yellowcat98.profilebio",
 	"name": "ProfileBio",
 	"developer": "YellowCat98",
@@ -12,7 +16,7 @@
 			"resources/arial.ttf"
 		],
 		"sprites": [
-			"resources/Butotn.png"
+			"resources/btn.png"
 		]
 	}
 }

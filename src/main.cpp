@@ -182,8 +182,8 @@ class $modify(PBProfilePage, ProfilePage) {
         return false;
         if (ownProfile) {
         auto menu = CCMenu::create();
-        auto Butotn = CCSprite::create("Butotn.png"_spr);
-        auto aboutMeBtn = CCMenuItemSpriteExtra::create(Butotn, nullptr, nullptr);
+        auto btn = CCSprite::create("btn.png"_spr);
+        auto aboutMeBtn = CCMenuItemSpriteExtra::create(btn, nullptr, nullptr);
         aboutMeBtn->setEnabled(true);
         menu->setTouchPriority(-10000000); // why is this happening to me
         menu->setPosition(ccp(90, 155));
