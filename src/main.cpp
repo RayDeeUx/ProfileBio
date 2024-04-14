@@ -132,7 +132,7 @@ class AboutMeHandler : public cocos2d::CCObject {
 
 							if (showWindow) {
 								if (ImGui::Begin("Server Response:", &showWindow, ImGuiWindowFlags_AlwaysAutoResize)) {
-									ImGui::Text("%s", response);
+									ImGui::Text("%s", response.c_str());
 								}
 							}
 						});
