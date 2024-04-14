@@ -7,17 +7,17 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 project(ProfileBio VERSION 1.0.0)
 
 file(GLOB SOURCES
-    src/*.cpp
-    src/*.h
+	src/*.cpp
+	src/*.h
 )
 
 # Set up the mod binary
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 if (NOT DEFINED ENV{GEODE_SDK})
-    message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
+	message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
 else()
-    message(STATUS "Found Geode: $ENV{GEODE_SDK}")
+	message(STATUS "Found Geode: $ENV{GEODE_SDK}")
 endif()
 
 
