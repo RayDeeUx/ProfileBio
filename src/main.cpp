@@ -169,10 +169,11 @@ class AboutMeHandler : public cocos2d::CCObject {
 class $modify(PBProfilePage, ProfilePage) {
 	void loadPageFromUserInfo(GJUserScore* p0) {
 		ProfilePage::loadPageFromUserInfo(p0);
+		if (m_mainLayer->getChildByID("buttons-menu"_spr)) { return; }
 		auto menu = CCMenu::create();
 		menu->setID("buttons-menu"_spr);
 		menu->setPosition({0, 0});
-		menu->setTouchPriority(-10000000); // why is this happening to me
+		menu->setZOrder(INT8_MAX);
 		
 		auto bioShowSpr = ButtonSprite::create("Show Bio");
 		bioShowSpr->setScale(.5f);
@@ -201,6 +202,6 @@ class $modify(PBProfilePage, ProfilePage) {
 		}
 		#endif
 		
-		this->addChild(menu);
+		m_mainLayer->addChild(menu);
 	}
 };
