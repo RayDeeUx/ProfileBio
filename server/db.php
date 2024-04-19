@@ -9,6 +9,6 @@ $conn = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName);
 
 // Check connection
 if ($conn->connect_error) {
-    echo(-1);
+	echo(-1);
 }
 ?>
