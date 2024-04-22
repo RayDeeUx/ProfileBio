@@ -24,8 +24,11 @@
 #include <cctype>
 #include <iomanip>
 #include <string>
+#include <ghc/filesystem.hpp>
+#include "imgui_internal.h"
 
 using namespace geode::prelude;
+namespace fs = ghc::filesystem;
 
 std::string urlEncode(const std::string& str) {
 	std::ostringstream encoded;
@@ -44,55 +47,42 @@ std::string urlEncode(const std::string& str) {
 	return encoded.str();
 }
 
-class $modify(BioProfilePage, ProfilePage) {
-private:
-	int m_accountID;
+
+
+class showBio : public geode::Popup<std::string const&> {
+protected:
+    bool setup(std::string const& value) override {
+        auto winSize = CCDirector::sharedDirector()->getWinSize();
+
+        // convenience function provided by Popup 
+        // for adding/setting a title to the popup
+        this->setTitle("About Me");
+
+		CCSize MDTextSize = { 329.5, 200.0f };
+
+
+		auto RealBio = MDTextArea::create(value.c_str(), MDTextSize);
+		RealBio->setPosition(ccp(0.0f, -10.0f));
+		m_buttonMenu->addChild(RealBio);
+
+
+        return true;
+    }
+
 public:
-	bool init(int accountID, bool ownProfile) {
-		if (!ProfilePage::init(accountID, ownProfile)) { return false; }
-		m_accountID = accountID;
-		return true;
-	}
-	void fetchBioData(CCObject* pSender) {
-		int accountID = m_accountID;
-		auto loadingPopup = LoadingCircle::create();
-		loadingPopup->show();
-		web::AsyncWebRequest()
-			.fetch("https://yellowcat98.5v.pl/profilebio/PB_getProfileBio.php?accountID=" + std::to_string(accountID))
-			.text()
-			.then([=](std::string const& bioData) {
-				try {
-					if (bioData == "-1") {
-						FLAlertLayer::create("Uh oh!", "This person hasn't written their bio yet.", "OK")->show();
-						loadingPopup->fadeAndRemove();
-					} else {
-						auto bioObject = matjson::parse(bioData);
-						auto bioAccountID = bioObject["accountID"].as_string();
-						auto bioBio = bioObject["bio"].as_string();
-						auto bioID = bioObject["id"].as_string();
-						auto showBioPopup = FLAlertLayer::create("About me", gd::string(bioBio.c_str()), "ok");
-						showBioPopup->m_scene = this;
-						showBioPopup->show();
-						loadingPopup->fadeAndRemove();
-					}
-				} catch (const std::exception& e) {
-					auto errorPopup = FLAlertLayer::create("Error", "Failed to parse Json. Error: " + std::string(e.what()) + "\nThis is probably not your fault, submit a github issue if you keep encountering this error.", "Oki");
-					errorPopup->m_scene = this;
-					errorPopup->show();
-					loadingPopup->fadeAndRemove();
-				}
-			})
-			.expect([=](std::string const& error) {
-				auto errorPopup = FLAlertLayer::create("Error", "Failed to fetch bio data.", "Ok");
-				errorPopup->m_scene = this;
-				errorPopup->show();
-				loadingPopup->fadeAndRemove();
-			});
-	}
+    static showBio* create(std::string const& text) {
+        auto ret = new showBio();
+        if (ret && ret->init(350.0f, 250.f, text)) {
+            ret->autorelease();
+            return ret;
+        }
+        CC_SAFE_DELETE(ret);
+        return nullptr;
+    }
 };
 
 class AboutMeHandler : public cocos2d::CCObject {
-	char buffer[1024] = "";
+	char buffer[4096] = "";
 	bool theWindowShow = true;
 	public:
 	void onAboutMe(CCObject* pSender) {
@@ -103,8 +93,22 @@ class AboutMeHandler : public cocos2d::CCObject {
 			ImGui::GetIO().FontDefault = arialFont;
 		}).draw([this, &localWindowShow] {
 			if (localWindowShow) {
-				if (ImGui::Begin("UploadBio", &localWindowShow, ImGuiWindowFlags_AlwaysAutoResize)) {
-					if (ImGui::Button("Upload")) {
+				if (ImGui::Begin("Add Bio", &localWindowShow, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse)) {
+
+					ImGuiStyle& style = ImGui::GetStyle();
+
+					// styling
+					style.WindowRounding = 12.0f;
+					style.FrameRounding = 12.0f;
+
+
+
+					ImGui::InputTextMultiline("##source", buffer, IM_ARRAYSIZE(buffer), ImVec2(500, 300)); // moved to be above the button, added in 1.1.0
+
+					ImGui::Spacing();
+
+					// upload bio code
+					if (ImGui::Button("Upload!", ImVec2(500, 0))) {
 						std::string BioRequestBody = "?accountID=" + std::to_string(GJAccountManager::get()->m_accountID) + "&bio=" + urlEncode(buffer);
 						web::AsyncWebRequest()
 						.post("https://yellowcat98.5v.pl/profilebio/PB_uploadProfileBio.php" + BioRequestBody)
@@ -116,7 +120,7 @@ class AboutMeHandler : public cocos2d::CCObject {
 								ImGui::GetIO().FontDefault = arialFont;
 							}).draw([=]() mutable {
 								if (showWindow) {
-									if (ImGui::Begin("Server Response", &showWindow, ImGuiWindowFlags_AlwaysAutoResize)) {
+									if (ImGui::Begin("Server Response", &showWindow, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse)) {
 										ImGui::Text("%s", response.c_str());
 									}
 								}
@@ -126,7 +130,7 @@ class AboutMeHandler : public cocos2d::CCObject {
 							log::info("{}", error);
 						});
 					}
-				ImGui::InputTextMultiline("##source", buffer, IM_ARRAYSIZE(buffer), ImVec2(500, 300));
+				
 				}
 			ImGui::End();
 			}
@@ -134,33 +138,74 @@ class AboutMeHandler : public cocos2d::CCObject {
 	}
 };
 
+
+std::string dataBio;
+std::string realBio;
+
 class $modify(PBProfilePage, ProfilePage) {
+private:
+	int m_accountID;
+	bool m_ownProfile;
+public:
+
+	bool init(int accountID, bool ownProfile) {
+		if (!ProfilePage::init(accountID, ownProfile)) { return false; }
+		m_accountID = accountID;
+		m_ownProfile = ownProfile;
+		return true;
+	}
 	void loadPageFromUserInfo(GJUserScore* p0) {
 		ProfilePage::loadPageFromUserInfo(p0);
-		if (m_mainLayer->getChildByID("buttons-menu"_spr)) { return; } // avoid layer duplication
-		auto menu = CCMenu::create();
-		menu->setID("buttons-menu"_spr);
-		menu->setPosition({0, 0});
-		menu->setZOrder(INT8_MAX);
-		auto bioShowSpr = ButtonSprite::create("Show Bio");
-		bioShowSpr->setScale(.5f);
-		auto bioShow = CCMenuItemSpriteExtra::create(bioShowSpr, this, menu_selector(BioProfilePage::fetchBioData));
-		bioShow->setPosition({getChildByIDRecursive("username-label")->getPositionX(), 168});
-		bioShow->setAnchorPoint({.5, 1.f});
-		bioShow->setID("show-bio-btn"_spr);
-		menu->addChild(bioShow);
-		#ifndef GEODE_IS_MOBILE
-		if (m_ownProfile) {
-			auto btn = CCSprite::create("btn.png"_spr);
-			auto aboutMeBtn = CCMenuItemSpriteExtra::create(btn, nullptr, nullptr);
-			aboutMeBtn->setEnabled(true);
-			aboutMeBtn->setID("add-bio-btn"_spr);
-			aboutMeBtn->setPosition({getChildByIDRecursive("background")->getContentWidth(), getChildByIDRecursive("bottom-menu")->getPositionY()});
-			menu->addChild(aboutMeBtn);
-			auto aboutMeHandler = new AboutMeHandler();
-			aboutMeBtn->setTarget(aboutMeHandler, menu_selector(AboutMeHandler::onAboutMe));
+		int accountID = m_accountID;
+		auto leftMenu = this->getChildByIDRecursive("left-menu");
+		auto loadingCircle = LoadingCircle::create();
+		loadingCircle->setPosition(ccp(-195.0f, 85.0f));
+		loadingCircle->setScale(0.5f, 0.5f);
+		loadingCircle->show();
+		m_buttons->addObject(loadingCircle);
+		web::AsyncWebRequest()
+		.fetch("https://yellowcat98.5v.pl/profilebio/PB_getProfileBio.php?accountID=" + std::to_string(accountID))
+		.text()
+		.then([=](std::string const& bioData) {
+			dataBio = bioData;
+				if (dataBio != "-1") {
+					auto socialsMenu = this->getChildByIDRecursive("socials-menu");
+					auto bioShowSpr = CCSprite::create("showBio.png"_spr);
+					auto bioShow = CCMenuItemSpriteExtra::create(bioShowSpr, this, menu_selector(PBProfilePage::showBio));
+					bioShow->setID("show-bio-btn"_spr);
+					socialsMenu->addChild(bioShow);
+					m_buttons->addObject(bioShow); // avoid duplication
+					socialsMenu->updateLayout();
+					loadingCircle->fadeAndRemove();
+					
+
+					// the actual data here (turned into a json)
+					auto bioObject = matjson::parse(bioData);
+					auto bioAccountID = bioObject["accountID"].as_string();
+					auto bioBio = bioObject["bio"].as_string();
+					auto bioID = bioObject["id"].as_string();
+					realBio = bioBio;
+					
+				}
+			});
+
+			// if ownProfile && geode is nono mobile
+			#ifndef GEODE_IS_MOBILE
+			if (m_ownProfile) {
+				auto addBioSpr = CCSprite::create("addAboutMe.png"_spr);
+				auto aboutMeBtn = CCMenuItemSpriteExtra::create(addBioSpr, nullptr, nullptr);
+				aboutMeBtn->setEnabled(true);
+				aboutMeBtn->setID("add-bio-btn"_spr);
+				auto bottomMenu = this->getChildByIDRecursive("bottom-menu");
+				bottomMenu->addChild(aboutMeBtn);
+				bottomMenu->updateLayout();
+				auto aboutMeHandler = new AboutMeHandler();
+				aboutMeBtn->setTarget(aboutMeHandler, menu_selector(AboutMeHandler::onAboutMe));
+			}
+			#endif
 		}
-		#endif
-		m_mainLayer->addChild(menu);
+	void showBio(CCObject* pSender) {
+		auto showbioPopup = showBio::create(realBio);
+		showbioPopup->show();
 	}
 };
