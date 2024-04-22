@@ -1,5 +1,5 @@
 # 1.1.0
-- New logom
+- New logo,
 - UI Changes which includes:
 > moved the add bio button slightly.
 > new add bio texture,
@@ -8,6 +8,7 @@
 - Markdown support,
 - Rewritten client-side fetch Bio code so now the show bio button only appears if the person has a bio,
 - Changed bio character limit, its now 2048!
+- 
 # 1.0.2
 - avoid layer duplication during each profile reload
 - rewrote the error for users without profiles
