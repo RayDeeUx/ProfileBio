@@ -185,6 +185,8 @@ public:
 					auto bioID = bioObject["id"].as_string();
 					realBio = bioBio;
 					
+				} else {
+					loadingCircle->fadeAndRemove();
 				}
 			});
 
