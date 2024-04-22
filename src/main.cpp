@@ -157,7 +157,6 @@ public:
 	void loadPageFromUserInfo(GJUserScore* p0) {
 		ProfilePage::loadPageFromUserInfo(p0);
 		int accountID = m_accountID;
-		auto leftMenu = this->getChildByIDRecursive("left-menu");
 		auto loadingCircle = LoadingCircle::create();
 		loadingCircle->setPosition(ccp(-195.0f, 85.0f));
 		loadingCircle->setScale(0.5f, 0.5f);
