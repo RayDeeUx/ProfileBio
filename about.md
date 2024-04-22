@@ -8,4 +8,8 @@ allows you to have an "About me" section in your profile.
 
 note that it crashes on private servers.
 
+thanks [RayDeeUx](user:1941705) for the logo
+
 server files are on github :)
+
+**note that this crashes on gdpss. this is really only meant for official GD servers.**
