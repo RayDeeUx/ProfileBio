@@ -1,4 +1,4 @@
-# 1.1.0
+# 2.0.0
 - New logo,
 - UI Changes which includes:
 > moved the add bio button slightly.
