@@ -109,9 +109,10 @@ class AboutMeHandler : public cocos2d::CCObject {
 
 					// upload bio code
 					if (ImGui::Button("Upload!", ImVec2(500, 0))) {
-						std::string BioRequestBody = "?accountID=" + std::to_string(GJAccountManager::get()->m_accountID) + "&bio=" + urlEncode(buffer);
+						std::string BioRequestBody = "accountID=" + std::to_string(GJAccountManager::get()->m_accountID) + "&bio=" + urlEncode(buffer);
 						web::AsyncWebRequest()
-						.post("https://yellowcat98.5v.pl/profilebio/PB_uploadProfileBio.php" + BioRequestBody)
+						.bodyRaw(BioRequestBody)
+						.post("https://yellowcat98.5v.pl/profilebio/PB_uploadProfileBioTest.php")
 						.text()
 						.then([=](std::string const& response) {
 							bool showWindow = true;
