@@ -7,8 +7,7 @@
 > show bio button texture changed
 - Markdown support,
 - Rewritten client-side fetch Bio code so now the show bio button only appears if the person has a bio,
-- Changed bio character limit, its now 2048!
-- 
+- Changed bio character limit, it's now 2048.
 # 1.0.2
 - avoid layer duplication during each profile reload
 - rewrote the error for users without profiles
