@@ -112,7 +112,7 @@ class AboutMeHandler : public cocos2d::CCObject {
 						std::string BioRequestBody = "accountID=" + std::to_string(GJAccountManager::get()->m_accountID) + "&bio=" + urlEncode(buffer);
 						web::AsyncWebRequest()
 						.bodyRaw(BioRequestBody)
-						.post("https://yellowcat98.5v.pl/profilebio/PB_uploadProfileBioTest.php")
+						.post("https://yellowcat98.5v.pl/profilebio/PB_uploadProfileBio.php")
 						.text()
 						.then([=](std::string const& response) {
 							bool showWindow = true;
