@@ -170,7 +170,7 @@ public:
 		.text()
 		.then([=](std::string const& bioData) {
 			dataBio = bioData;
-				if (dataBio != "-1") {
+				if (dataBio != "-1" && userAccID > 0) {
 					auto socialsMenu = this->getChildByIDRecursive("socials-menu");
 					auto bioShowSpr = CCSprite::create("showBio.png"_spr);
 					auto bioShow = CCMenuItemSpriteExtra::create(bioShowSpr, this, menu_selector(PBProfilePage::showBio));
@@ -194,8 +194,19 @@ public:
 			});
 
 			// if ownProfile && geode is nono mobile
-			// #ifndef GEODE_IS_MOBILE commented out temporarily
-
+			#ifndef GEODE_IS_MOBILE commented out temporarily
+			if (m_ownProfile) {
+				auto addBioSpr = CCSprite::create("addAboutMe.png"_spr);
+				auto aboutMeBtn = CCMenuItemSpriteExtra::create(addBioSpr, nullptr, nullptr);
+				aboutMeBtn->setEnabled(true);
+				aboutMeBtn->setID("add-bio-btn"_spr);
+				auto bottomMenu = this->getChildByIDRecursive("bottom-menu");
+				bottomMenu->addChild(aboutMeBtn);
+				bottomMenu->updateLayout();
+				auto aboutMeHandler = new AboutMeHandler();
+				aboutMeBtn->setTarget(aboutMeHandler, menu_selector(AboutMeHandler::onAboutMe));
+			}
+			#endif
 		}
 	void showBio(CCObject* pSender) {
 		auto showbioPopup = showBio::create(realBio);
