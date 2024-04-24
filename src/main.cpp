@@ -143,6 +143,8 @@ class AboutMeHandler : public cocos2d::CCObject {
 std::string dataBio;
 std::string realBio;
 
+int userAccID = GJAccountManager::get()->m_accountID;
+
 class $modify(PBProfilePage, ProfilePage) {
 private:
 	int m_accountID;
@@ -193,18 +195,7 @@ public:
 
 			// if ownProfile && geode is nono mobile
 			// #ifndef GEODE_IS_MOBILE commented out temporarily
-			if (m_ownProfile) {
-				auto addBioSpr = CCSprite::create("addAboutMe.png"_spr);
-				auto aboutMeBtn = CCMenuItemSpriteExtra::create(addBioSpr, nullptr, nullptr);
-				aboutMeBtn->setEnabled(true);
-				aboutMeBtn->setID("add-bio-btn"_spr);
-				auto bottomMenu = this->getChildByIDRecursive("bottom-menu");
-				bottomMenu->addChild(aboutMeBtn);
-				bottomMenu->updateLayout();
-				auto aboutMeHandler = new AboutMeHandler();
-				aboutMeBtn->setTarget(aboutMeHandler, menu_selector(AboutMeHandler::onAboutMe));
-			}
-			// #endif
+
 		}
 	void showBio(CCObject* pSender) {
 		auto showbioPopup = showBio::create(realBio);
