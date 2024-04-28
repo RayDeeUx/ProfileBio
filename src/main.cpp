@@ -194,7 +194,7 @@ public:
 			});
 
 			// if ownProfile && geode is nono mobile
-			#ifndef GEODE_IS_MOBILE commented out temporarily
+			#ifndef GEODE_IS_MOBILE
 			if (m_ownProfile) {
 				auto addBioSpr = CCSprite::create("addAboutMe.png"_spr);
 				auto aboutMeBtn = CCMenuItemSpriteExtra::create(addBioSpr, nullptr, nullptr);
