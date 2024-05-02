@@ -4,11 +4,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_OSX_ARCHITECTURES "x86_64")
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-if(APPLE)
-	project(ProfileBio VERSION 1.0.0 LANGUAGES CXX OBJCXX)
-else()
-	project(ProfileBio VERSION 1.0.0)
-endif()
+
+project(ProfileBio VERSION 2.1.0) # see guys i actually updated the VERSION thing in cmake! :D
 
 if(${GEODE_TARGET_PLATFORM} STREQUAL "iOS")
   message(STATUS "building for ios :3c")
