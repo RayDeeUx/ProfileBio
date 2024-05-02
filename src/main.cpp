@@ -16,6 +16,7 @@
 #include <Geode/modify/MenuLayer.hpp>
 #include <Geode/modify/ProfilePage.hpp>
 #include <Geode/utils/web.hpp>
+#include <Geode/Geode.hpp>
 #include <matjson.hpp>
 
 #ifndef TARGET_OS_IOS
