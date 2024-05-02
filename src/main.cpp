@@ -85,13 +85,13 @@ public:
         return nullptr;
     }
 };
+#ifndef TARGET_OS_IOS
 
 class AboutMeHandler : public cocos2d::CCObject {
 	char buffer[4096] = "";
 	bool theWindowShow = true;
 	public:
 	void onAboutMe(CCObject* pSender) {
-		#ifndef TARGET_OS_IOS
 		theWindowShow = true;
 		bool& localWindowShow = theWindowShow;
 		ImGuiCocos::get().setup([]{
@@ -144,9 +144,10 @@ class AboutMeHandler : public cocos2d::CCObject {
 			ImGui::End();
 			}
 		});
-		#endif
 	}
 };
+
+#endif // TARGET_OS_IOS
 
 
 std::string dataBio;
@@ -203,7 +204,7 @@ public:
 			});
 
 			// if ownProfile && geode is nono mobile
-			#ifndef GEODE_IS_MOBILE
+			#ifndef GEODE_IS_MOBILE && TARGET_OS_IOS
 			if (m_ownProfile) {
 				auto addBioSpr = CCSprite::create("addAboutMe.png"_spr);
 				auto aboutMeBtn = CCMenuItemSpriteExtra::create(addBioSpr, nullptr, nullptr);
