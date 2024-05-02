@@ -18,15 +18,18 @@
 #include <Geode/modify/ProfilePage.hpp>
 #include <Geode/utils/web.hpp>
 #include <matjson.hpp>
+#ifndef GEODE_IS_MOBILE
 #include <imgui.h>
 #include <imgui-cocos.hpp>
+#include "imgui_internal.h"
+#endif // GEODE_IS_MOBILE
 #include <iostream>
 #include <sstream>
 #include <cctype>
 #include <iomanip>
 #include <string>
 #include <ghc/filesystem.hpp>
-#include "imgui_internal.h"
+
 
 using namespace geode::prelude;
 namespace fs = ghc::filesystem;
@@ -87,6 +90,7 @@ class AboutMeHandler : public cocos2d::CCObject {
 	bool theWindowShow = true;
 	public:
 	void onAboutMe(CCObject* pSender) {
+		#ifndef GEODE_IS_MOBILE
 		theWindowShow = true;
 		bool& localWindowShow = theWindowShow;
 		ImGuiCocos::get().setup([]{
@@ -139,6 +143,7 @@ class AboutMeHandler : public cocos2d::CCObject {
 			ImGui::End();
 			}
 		});
+		#endif // GEODE_IS_MOBILE
 	}
 };
 
