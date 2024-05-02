@@ -1,56 +1,61 @@
 <?php
-include("db.php");
+include("db.php"); // Assuming this includes your mysqli database connection
+include("CheckAuth.php");
 
-// fix bad words
-$bannedwords = ["nigga", "nigger", "faggot", "retard", "tranny", "fag", "dyke"];
+// Fetch banned words
+$badWordQuery = "SELECT word FROM bannedwords"; // Assuming the column name is 'word'
+$result = $conn->query($badWordQuery);
+$bannedWords = array();
+while ($row = $result->fetch_assoc()) {
+    $bannedWords[] = $row['word'];
+}
 
-// Check if accountID and bio parameters are set in the POST request
-if(isset($_POST['accountID']) && isset($_POST['bio'])) {
-    // Get the values of accountID and bio parameters from the POST data
+if(isset($_POST['accountID'], $_POST['bio'], $_POST['authCode'])) {
     $accountID = $_POST['accountID'];
     $bio = $_POST['bio'];
-
-    // Trim input
-    $accountID = trim($accountID);
-    $bio = trim($bio);
-
-    // Sanitize inputs
-    $accountID = mysqli_real_escape_string($conn, $accountID);
-    $bio = mysqli_real_escape_string($conn, $bio);
-
-    $check = "SELECT accountID FROM bios WHERE accountID = '$accountID'";
-    $userHasBio = $conn->query($check);
+    $authCode = $_POST['authCode'];
 
     $hasBadWord = false;
-
-    foreach($bannedwords as $badword) {
-        if (strpos($bio, $badword) !== false) {
-            echo "Looks like your bio contains a banned word, bad words are not allowed.";
+    foreach($bannedWords as $badWord) {
+        if (strpos($bio, $badWord) !== false) {
+            echo "Your bio contains a banned word. Remove it.";
             $hasBadWord = true;
             break;
         }
     }
 
     if (!$hasBadWord) {
-        if (empty($bio)) {
-            echo "Looks like your bio is empty, you cannot have an empty bio.";
-        } elseif ($userHasBio && $userHasBio->num_rows > 0) {
-            $updateBioQuery = "UPDATE bios SET bio = '$bio' WHERE accountID = '$accountID'";
-            if ($conn->query($updateBioQuery) === TRUE) {
-                echo "Bio updated successfully!";
-            } else {
-                echo "There has been an error updating your bio.";
-            }
+        if (!compareAuthCodes($authCode, $accountID, $conn)) {
+            exit("Authentication Failed.");
+        } elseif (empty($bio)) {
+            echo "Your bio is empty. Please provide a bio.";
         } else {
-            $uploadBioQuery = "UPDATE bios SET bio = '$bio' WHERE accountID = '$accountID'";
-            if ($conn->query($uploadBioQuery) === TRUE) {
-                echo "Your bio is uploaded successfully to the servers!";
+            $accountID = mysqli_real_escape_string($conn, trim($accountID));
+            $bio = mysqli_real_escape_string($conn, trim($bio));
+            $authCode = mysqli_real_escape_string($conn, trim($authCode));
+
+            $check = "SELECT accountID FROM bios WHERE accountID = '$accountID'";
+            $result = $conn->query($check);
+            $hasBio = ($result->num_rows > 0);
+
+            if ($hasBio) {
+                $updateBioQuery = "UPDATE bios SET bio = '$bio' WHERE accountID = '$accountID'";
             } else {
-                echo "There has been an error uploading your bio.";
+                $updateBioQuery = "INSERT INTO bios (accountID, bio) VALUES ('$accountID', '$bio')";
+            }
+
+            if ($conn->query($updateBioQuery)) {
+                if ($hasBio) {
+                    echo "Your bio has been successfully updated!";
+                } else {
+                    echo "Your bio has been uploaded to the servers!";
+                }
+            } else {
+                echo "An error occurred while updating/uploading your bio.";
             }
         }
     }
 } else {
-    echo "Missing accountID or bio parameters in the request.";
+    echo "Missing arguments.";
 }
 ?>

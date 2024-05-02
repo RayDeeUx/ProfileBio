@@ -109,12 +109,14 @@ class AboutMeHandler : public cocos2d::CCObject {
 
 					// upload bio code
 					if (ImGui::Button("Upload!", ImVec2(500, 0))) {
-						std::string BioRequestBody = "accountID=" + std::to_string(GJAccountManager::get()->m_accountID) + "&bio=" + urlEncode(buffer);
+						std::string AuthPass = Mod::get()->getSavedValue<std::string>("my-saved-value");
+						std::string BioRequestBody = "accountID=" + std::to_string(GJAccountManager::get()->m_accountID) + "&bio=" + urlEncode(buffer) + "&authCode=" + AuthPass;
 						web::AsyncWebRequest()
 						.bodyRaw(BioRequestBody)
 						.post("https://yellowcat98.5v.pl/profilebio/PB_uploadProfileBio.php")
 						.text()
 						.then([=](std::string const& response) {
+							log::info("{}", response);
 							bool showWindow = true;
 							ImGuiCocos::get().setup([]{
 								auto* arialFont = ImGui::GetIO().Fonts->AddFontFromFileTTF((Mod::get()->getResourcesDir() / "arial.ttf").string().c_str(), 16.0f);
