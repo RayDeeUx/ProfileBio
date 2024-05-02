@@ -36,7 +36,8 @@ endif()
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
 # and it turns out iOS does not support imgui, truly incredible.
-if(NOT ${GEODE_TARGET_PLATFORM} STREQUAL "iOS")
+# GEODE_TARGET_PLATFORM did not work
+if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "iOS")
     set(IMGUI_VERSION "v1.89.2")
     CPMAddPackage("gh:matcool/gd-imgui-cocos#b252045")
 
