@@ -1,3 +1,8 @@
+# 2.1.0
+- New authentication system
+- Fixed SQL Injection
+- added iOS support
+- removed herobrine
 # 2.0.0
 - New logo,
 - UI Changes which includes:
