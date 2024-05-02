@@ -1,8 +1,8 @@
 <?php
-$dbHost = "sql4.5v.pl";
-$dbUsername = "sus69420_yellowcat98";
-$dbPassword = "5df2aa9c1f";
-$dbName = "sus69420_yellowcat98";
+$dbHost = "not telling";
+$dbUsername = "not telling";
+$dbPassword = "not telling";
+$dbName = "not telling";
 
 // Create connection
 $conn = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName);
