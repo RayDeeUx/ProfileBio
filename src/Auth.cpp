@@ -4,7 +4,7 @@
  * PB_Auth.php stored those 2 parameters into the Auth table in the database
  * now, each time the mod loads, it checks for whether the accountID has a Auth string attached to it
 */
-#include <Geode/geode.hpp>
+#include <Geode/Geode.hpp>
 #include <Geode/utils/web.hpp>
 #include <Geode/modify/LoadingLayer.hpp>
 #include <random>
