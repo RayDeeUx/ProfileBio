@@ -91,6 +91,7 @@ class AboutMeHandler : public cocos2d::CCObject {
 	bool theWindowShow = true;
 	public:
 	void onAboutMe(CCObject* pSender) {
+		#ifndef TARGET_OS_IOS
 		theWindowShow = true;
 		bool& localWindowShow = theWindowShow;
 		ImGuiCocos::get().setup([]{
@@ -143,6 +144,7 @@ class AboutMeHandler : public cocos2d::CCObject {
 			ImGui::End();
 			}
 		});
+		#endif
 	}
 };
 
