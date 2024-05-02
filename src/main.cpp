@@ -18,11 +18,11 @@
 #include <Geode/modify/ProfilePage.hpp>
 #include <Geode/utils/web.hpp>
 #include <matjson.hpp>
-#ifndef GEODE_IS_MOBILE
+#ifndef TARGET_OS_IOS
 #include <imgui.h>
 #include <imgui-cocos.hpp>
 #include "imgui_internal.h"
-#endif // GEODE_IS_MOBILE
+#endif // TARGET_OS_IOS
 #include <iostream>
 #include <sstream>
 #include <cctype>
@@ -90,7 +90,7 @@ class AboutMeHandler : public cocos2d::CCObject {
 	bool theWindowShow = true;
 	public:
 	void onAboutMe(CCObject* pSender) {
-		#ifndef GEODE_IS_MOBILE
+		#ifndef TARGET_OS_IOS
 		theWindowShow = true;
 		bool& localWindowShow = theWindowShow;
 		ImGuiCocos::get().setup([]{
@@ -143,7 +143,7 @@ class AboutMeHandler : public cocos2d::CCObject {
 			ImGui::End();
 			}
 		});
-		#endif // GEODE_IS_MOBILE
+		#endif // TARGET_OS_IOS
 	}
 };
 
