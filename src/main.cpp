@@ -14,7 +14,6 @@
 #endif
 
 #include <Geode/modify/MenuLayer.hpp>
-#include <Geode/Geode.hpp>
 #include <Geode/modify/ProfilePage.hpp>
 #include <Geode/utils/web.hpp>
 #include <matjson.hpp>
