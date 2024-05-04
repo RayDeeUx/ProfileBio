@@ -8,6 +8,7 @@
 #include <Geode/utils/web.hpp>
 #include <Geode/modify/LoadingLayer.hpp>
 #include <random>
+#include <ctime>
 
 using namespace geode::prelude;
 
@@ -20,9 +21,10 @@ std::string generateRandomString(int length) {
     std::string randomString;
     randomString.reserve(length);
 
+    // Use current time as part of the seed
+    std::time_t seed = std::time(nullptr);
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    std::mt19937 gen(seed);
     std::uniform_int_distribution<> dis(0, max_index);
 
     for (int i = 0; i < length; ++i) {
@@ -34,18 +36,15 @@ std::string generateRandomString(int length) {
 
 $on_mod(Loaded) {
     if (accID > 0) {
-        auto Auth = web::fetch("http://yellowcat98.5v.pl/profilebio/PB_hasAuthCode.php?accountID=" + std::to_string(accID));
+        std::string AuthPass = generateRandomString(16);
+        auto Auth = web::fetch("http://yellowcat98.5v.pl/profilebio/PB_hasAuthCode.php?accountID=" + std::to_string(accID) + "&AuthCode=" + AuthPass);
 
         auto hasAuth = Auth.value();
-        log::info("{}", hasAuth);
-
 
         if (hasAuth != "1") {
             log::info("Looks like you have Authentication!");
         } else {
             log::info("No authentication code found in DB, adding Authentication...");
-            std::string AuthPass = generateRandomString(16);
-
             Mod::get()->setSavedValue<std::string>("auth-code", AuthPass);
         }
     }
