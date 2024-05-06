@@ -1,3 +1,6 @@
+# 2.1.1
+- Fix crash when exiting early before bio loaded
+- removed herobrine (again)
 # 2.1.0
 - New authentication system
 - Fixed SQL Injection

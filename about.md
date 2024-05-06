@@ -19,4 +19,4 @@ Join the [discord](https://discord.gg/vweCVPgamC) if you want to report issues/b
 
 server files are on github :)
 
-**note that this crashes on gdpss. this is really only meant for official GD servers.**
+**This mod cannot be used on private GD servers.**
