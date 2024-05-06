@@ -163,7 +163,7 @@ private:
 public:
 	#ifndef __APPLE__
 	void onClose(CCObject* sender) {
-		if (getChildByIDRecursive("show-bio-btn"_spr)) {
+		if (!getChildByIDRecursive("loading-circle"_spr)) {
 			ProfilePage::onClose(sender);
 		}
 	}
@@ -179,6 +179,7 @@ public:
 		int accountID = m_accountID;
 		auto loadingCircle = LoadingCircle::create();
 		loadingCircle->setPosition(ccp(-195.0f, 85.0f));
+		loadingCircle->setID("loading-circle"_spr);
 		loadingCircle->setScale(0.5f, 0.5f);
 		loadingCircle->show();
 		m_buttons->addObject(loadingCircle);
