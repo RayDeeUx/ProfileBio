@@ -161,11 +161,13 @@ private:
 	int m_accountID;
 	bool m_ownProfile;
 public:
+	#ifndef __APPLE__
 	void onClose(CCObject* sender) {
 		if (getChildByIDRecursive("show-bio-btn"_spr)) {
 			ProfilePage::onClose(sender);
 		}
 	}
+	#endif
 	bool init(int accountID, bool ownProfile) {
 		if (!ProfilePage::init(accountID, ownProfile)) { return false; }
 		m_accountID = accountID;
