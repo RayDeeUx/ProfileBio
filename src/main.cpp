@@ -168,9 +168,9 @@ public:
 		ProfilePage::onClose(sender);
 		if (request.has_value()) {
 			request->get()->cancel();
-			request = std::nullopt;
-			loadingCircle->fadeAndRemove();
+			if (loadingCircle) loadingCircle->fadeAndRemove();
 		}
+		request = std::nullopt;
 	}
 	#endif
 	bool init(int accountID, bool ownProfile) {
@@ -186,7 +186,7 @@ public:
 		loadingCircle->setID("loading-circle"_spr);
 		loadingCircle->setPosition(ccp(-195.0f, 85.0f));
 		loadingCircle->setScale(0.5f, 0.5f);
-		loadingCircle->setZOrder(m_mainLayer->getZOrder() + 5);
+		loadingCircle->setZOrder(m_mainLayer->getZOrder() + 205);
 		loadingCircle->show();
 		m_buttons->addObject(loadingCircle);
 		request = web::AsyncWebRequest()

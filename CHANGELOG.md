@@ -1,3 +1,5 @@
+# 2.1.2
+- Fix crash
 # 2.1.1
 - Fix crash when exiting early before bio loaded (windows and android only)
 - removed herobrine (again)
