@@ -160,13 +160,16 @@ class $modify(PBProfilePage, ProfilePage) {
 private:
 	int m_accountID;
 	bool m_ownProfile;
-	bool canExit;
+	std::optional<geode::utils::web::SentAsyncWebRequestHandle> request;
+	LoadingCircle* loadingCircle;
 public:
 	#ifndef __APPLE__
 	void onClose(CCObject* sender) {
-		if (canExit) {
-			ProfilePage::onClose(sender);
-			canExit = false;
+		ProfilePage::onClose(sender);
+		if (request.has_value()) {
+			request->get()->cancel();
+			request = std::nullopt;
+			loadingCircle->fadeAndRemove();
 		}
 	}
 	#endif
@@ -174,20 +177,19 @@ public:
 		if (!ProfilePage::init(accountID, ownProfile)) { return false; }
 		m_accountID = accountID;
 		m_ownProfile = ownProfile;
-		canExit = false;
 		return true;
 	}
 	void loadPageFromUserInfo(GJUserScore* p0) {
 		ProfilePage::loadPageFromUserInfo(p0);
-		canExit = false;
 		int accountID = m_accountID;
-		auto loadingCircle = LoadingCircle::create();
+		loadingCircle = LoadingCircle::create();
 		loadingCircle->setID("loading-circle"_spr);
 		loadingCircle->setPosition(ccp(-195.0f, 85.0f));
 		loadingCircle->setScale(0.5f, 0.5f);
+		loadingCircle->setZOrder(m_mainLayer->getZOrder() + 5);
 		loadingCircle->show();
 		m_buttons->addObject(loadingCircle);
-		web::AsyncWebRequest()
+		request = web::AsyncWebRequest()
 		.fetch("https://yellowcat98.5v.pl/profilebio/PB_getProfileBio.php?accountID=" + std::to_string(accountID))
 		.text()
 		.then([=](std::string const& bioData) {
@@ -201,20 +203,22 @@ public:
 					m_buttons->addObject(bioShow); // avoid duplication
 					socialsMenu->updateLayout();
 					loadingCircle->fadeAndRemove();
-					canExit = true;
 					
-					// the actual data here (turned into a json)
+					/* 
+					the actual data here (turned into a json)
 					auto bioObject = matjson::parse(bioData);
-					auto bioAccountID = bioObject["accountID"].as_string();
+					auto bioAccountID = bioObject["accountID"];
 					auto bioBio = bioObject["bio"].as_string();
-					auto bioID = bioObject["id"].as_string();
-					realBio = bioBio;
+					auto bioID = bioObject["id"];
+					*/
+					
+					realBio = bioData;
 					
 				} else {
 					loadingCircle->fadeAndRemove();
-					canExit = true;
 				}
-			});
+			})
+			.send();
 
 			// if ownProfile && geode is nono mobile
 			#ifndef GEODE_IS_MOBILE && TARGET_OS_IOS
